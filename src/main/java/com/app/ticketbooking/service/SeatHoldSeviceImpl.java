@@ -60,13 +60,6 @@ public class SeatHoldSeviceImpl implements SeatHoldSevice {
 						seatHoldTimeMapItr.remove();
 						List<Seat> seats = seatHoldSeatsMap.get(seatHoldId);
 						seatUpdateService.changeSeatsStatus(seats, SeatStatus.HELD, SeatStatus.FREE);
-						// synchronized (seatHoldSeatsMap) {
-						// seatHoldSeatsMap.remove(seatHoldId);
-						// }
-
-						// System.out.println("Timedout >>" + seatHoldId);
-						// Not required
-						// SeatHoldAuthorizationService.removeAuthorizeUser(seatHoldId);
 					}
 				}
 			}
