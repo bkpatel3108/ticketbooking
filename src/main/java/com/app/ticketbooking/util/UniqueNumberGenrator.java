@@ -4,8 +4,8 @@ package com.app.ticketbooking.util;
 // procedure to generate unique number
 public class UniqueNumberGenrator {
 
-	static Integer uniqueNoTicketHold = 1000000000;
-	static Integer uniqueNoTicketConfirm = 2000000000;
+	private static Integer uniqueNoTicketHold = 1000000000;
+	private static Integer uniqueNoTicketConfirm = 2000000000;
 
 	// Returning unix timestamp
 	public static Integer getUnixTimeBasedUniqueNumber() {
