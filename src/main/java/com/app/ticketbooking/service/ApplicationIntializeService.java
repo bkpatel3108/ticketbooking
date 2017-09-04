@@ -11,15 +11,41 @@ import com.app.ticketbooking.valueobject.Venue;
 
 public class ApplicationIntializeService {
 
+	/**
+	 * 
+	 * Basic initialization
+	 * 
+	 * @param noOfRows
+	 *            Number of rows in Venue
+	 * @param noOfSeatsInRow
+	 *            Number of seats in each row of Venue
+	 */
 	public static void intialize(int noOfRows, int noOfSeatsInRow) {
 		intialize(noOfRows, noOfSeatsInRow, SeatSearchAlgo.ONLY_IN_SAME_ROW, null, null);
 	}
 
+	/***
+	 * 
+	 * Advance initialization This method initialize ticket service application
+	 * with given inputs
+	 * 
+	 * @param noOfRows
+	 *            Number of rows in Venue
+	 * @param noOfSeatsInRow
+	 *            Number of seats in each row of Venue
+	 * @param seatSearchAlgo
+	 *            Algorithm to find best seats for customer
+	 * @param seatHoldExpireTime
+	 *            Ticket hold expire time
+	 * @param interval
+	 *            Time interval for background service to recheck for expired
+	 *            tickets
+	 */
 	public static void intialize(int noOfRows, int noOfSeatsInRow, SeatSearchAlgo seatSearchAlgo,
 			Long seatHoldExpireTime, Long interval) {
 
 		Thread backgroundSeviceThread;
-		
+
 		// Configure Venue
 		configureVenue(noOfRows, noOfSeatsInRow);
 
@@ -36,7 +62,7 @@ public class ApplicationIntializeService {
 		backgroundSeviceThread.start();
 	}
 
-	// Simple configuration
+	// Venue configuration
 	public static void configureVenue(int noOfRows, int noOfSeatsInRow) {
 		Venue venue = Venue.getVenueInstance();
 		venue.setFreeSeats(noOfRows * noOfSeatsInRow);
