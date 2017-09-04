@@ -31,9 +31,13 @@ public class SeatHoldSeviceImpl implements SeatHoldSevice {
 	}
 
 	public void addSeatHold(Integer seatHoldId, List<Seat> seats) {
+		// locking on map object to make sure map concurrent exception access
+		// will not happen
 		synchronized (seatHoldTimeMap) {
 			seatHoldTimeMap.put(seatHoldId, System.currentTimeMillis());
 		}
+		// locking on map object to make sure map concurrent exception access
+		// will not happen
 		synchronized (seatHoldSeatsMap) {
 			seatHoldSeatsMap.put(seatHoldId, seats);
 		}
@@ -47,18 +51,29 @@ public class SeatHoldSeviceImpl implements SeatHoldSevice {
 		return seatHoldTimeMap.size();
 	}
 
+	/***
+	 * 
+	 * It makes held seats free if their hold time is expired
+	 * 
+	 * @param seatHoldExpireTime
+	 */
 	public void removeExpiredTicketHold(Long seatHoldExpireTime) {
 		Long currentTime = System.currentTimeMillis();
+		// locking on map object to make sure map concurrent exception access
+		// will not happen
 		synchronized (seatHoldTimeMap) {
 			Iterator seatHoldTimeMapItr = seatHoldTimeMap.entrySet().iterator();
+			// Loop through all active seat/ticket holds
 			while (seatHoldTimeMapItr.hasNext()) {
 				Entry<Integer, Long> seatHoldTimeMapEntry = (Entry<Integer, Long>) seatHoldTimeMapItr.next();
 				if (seatHoldTimeMapEntry != null) {
 					Long holdTime = seatHoldTimeMapEntry.getValue();
+					// to check seat/ticket hold is expired or not
 					if (holdTime + seatHoldExpireTime < currentTime) {
 						Integer seatHoldId = seatHoldTimeMapEntry.getKey();
 						seatHoldTimeMapItr.remove();
 						List<Seat> seats = seatHoldSeatsMap.get(seatHoldId);
+						// Make seats free of this seat/ticket hold
 						seatUpdateService.changeSeatsStatus(seats, SeatStatus.HELD, SeatStatus.FREE);
 					}
 				}
